@@ -1,2 +1,2 @@
 # rrredirector
-Redirects github.com pull request pages to review.rocks
+Chrome extension to redirect github.com pull request pages to review.rocks
