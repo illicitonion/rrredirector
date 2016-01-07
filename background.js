@@ -1,4 +1,4 @@
-var pullUrlPattern = /^https:\/\/github.com\/([^\/]*)\/([^\/]*)\/pull\/([0-9]+)$/i;
+var pullUrlPattern = /^https:\/\/github.com\/([^\/]*)\/([^\/]*)\/pull\/([0-9]+)/i;
 
 var disabled;
 
