@@ -13,6 +13,9 @@ chrome.webRequest.onBeforeRequest.addListener(
         if (disabled) {
             return {};
         }
+        if (req.type !== "main_frame") {
+            return {};
+        }
         var match = pullUrlPattern.exec(req.url);
         if (!match) {
             return {};
