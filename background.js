@@ -1,4 +1,5 @@
 var pullUrlPattern = /^https:\/\/github.com\/([^\/]*)\/([^\/]*)\/pull\/([0-9]+)/i;
+var createPattern = /^https:\/\/github.com\/([^\/]*)\/([^\/]*)\/pull\/create/i;
 
 var disabled;
 
@@ -8,6 +9,8 @@ chrome.browserAction.onClicked.addListener(function() {
     setDisabled(!disabled);
 });
 
+var createCache = {};
+
 chrome.webRequest.onBeforeRequest.addListener(
     function(req) {
         if (disabled) {
@@ -16,8 +19,17 @@ chrome.webRequest.onBeforeRequest.addListener(
         if (req.type !== "main_frame") {
             return {};
         }
+        if (req.method === "POST" && createPattern.test(req.url)) {
+            createCache[req.tabId] = Date.now()
+            return {};
+        }
         var match = pullUrlPattern.exec(req.url);
         if (!match) {
+            return {};
+        }
+        var lastCreate = createCache[req.tabId];
+        delete createCache[req.tabId];
+        if (lastCreate > Date.now() - 10000) {
             return {};
         }
         var redirectUrl = "https://review.rocks/#/repos/" + match[1] + "/" + match[2] + "/" + match[3] + "/history";
